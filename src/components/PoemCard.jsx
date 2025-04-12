@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase/config";

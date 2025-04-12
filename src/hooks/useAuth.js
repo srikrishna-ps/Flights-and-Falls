@@ -1,31 +1,19 @@
-import React, { useContext, useState, useEffect, createContext } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/auth";
+// src/hooks/useAuth.js
 
-const AuthContext = createContext();
+import { useState, useEffect } from 'react';
+import { auth } from '../firebase/config'; // Make sure the import is correct
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+// You might have your useAuth hook logic here
 
 const useAuth = () => {
-  return useContext(AuthContext);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(setUser);
+    return unsubscribe;
+  }, []);
+
+  return user;
 };
 
 export default useAuth;

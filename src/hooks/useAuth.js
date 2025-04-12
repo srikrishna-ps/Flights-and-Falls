@@ -1,11 +1,13 @@
 // src/hooks/useAuth.js
 
-import { useState, useEffect } from 'react';
-import { auth } from '../firebase/config'; // Make sure the import is correct
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { auth } from '../firebase'; // Assuming you're using Firebase
 
-// You might have your useAuth hook logic here
+// Create context for authentication
+const AuthContext = createContext();
 
-const useAuth = () => {
+// AuthProvider to wrap around app and provide auth state
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -13,7 +15,14 @@ const useAuth = () => {
     return unsubscribe;
   }, []);
 
-  return user;
+  return (
+    <AuthContext.Provider value={{ user }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
-export default useAuth;
+// Custom hook to use auth state
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

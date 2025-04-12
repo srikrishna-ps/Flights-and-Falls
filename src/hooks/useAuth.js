@@ -1,7 +1,7 @@
 // src/hooks/useAuth.js
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth } from '../firebase'; // Assuming you're using Firebase
+import { auth } from '../firebase/auth'; // Assuming you're using Firebase
 
 // Create context for authentication
 const AuthContext = createContext();

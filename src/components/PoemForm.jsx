@@ -1,87 +1,60 @@
-import { useState, useEffect } from "react";
-import { addDoc, collection, doc, getDoc, serverTimestamp, updateDoc } from "firebase/firestore";
-import { useNavigate, useParams } from "react-router-dom";
-import { db } from "../firebase/config";
-import useAuth from "../hooks/useAuth";
+// PoemForm.jsx
 
-export default function PoemForm() {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [thoughts, setThoughts] = useState("");
-  const [image, setImage] = useState("");
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth();
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth'; // Make sure we have access to user authentication
 
-  useEffect(() => {
-    if (id) {
-      const fetchPoem = async () => {
-        const docRef = doc(db, "poems", id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setTitle(data.title);
-          setBody(data.body);
-          setThoughts(data.thoughts);
-          setImage(data.image);
-        }
-      };
-      fetchPoem();
-    }
-  }, [id]);
+const PoemForm = () => {
+  const { user } = useAuth(); // Get the logged-in user
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const history = useHistory();
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const poemData = {
-      title,
-      body,
-      thoughts,
-      image,
-      createdAt: serverTimestamp(),
-      isAdmin: user?.email === process.env.REACT_APP_ADMIN_EMAIL,
-    };
-    if (id) {
-      await updateDoc(doc(db, "poems", id), poemData);
+    if (title && body) {
+      // Push new poem to Firebase (or markdown, etc)
+      console.log("Poem submitted:", { title, body });
+      // Redirect back to Home or All Poems page after submission
+      history.push('/');
     } else {
-      await addDoc(collection(db, "poems"), poemData);
+      alert("Please fill out both title and body!");
     }
-    navigate("/");
   };
 
+  // Ensure only admin can access the form
+  if (!user || user.email !== process.env.REACT_APP_ADMIN_EMAIL) {
+    return <p>You must be logged in as an admin to add poems.</p>;
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="p-4 max-w-2xl mx-auto">
-      <input
-        className="w-full mb-2 rounded p-2 border border-blue-300"
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        required
-      />
-      <textarea
-        className="w-full mb-2 rounded p-2 border border-blue-300"
-        placeholder="Body"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        required
-      />
-      <input
-        className="w-full mb-2 rounded p-2 border border-blue-300"
-        placeholder="Thoughts"
-        value={thoughts}
-        onChange={(e) => setThoughts(e.target.value)}
-      />
-      <input
-        className="w-full mb-2 rounded p-2 border border-blue-300"
-        placeholder="Image URL"
-        value={image}
-        onChange={(e) => setImage(e.target.value)}
-      />
-      <button
-        type="submit"
-        className="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-      >
-        {id ? "Update Poem" : "Submit Poem"}
-      </button>
-    </form>
+    <div className="poem-form-container">
+      <h1>Write a New Poem</h1>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="title">Poem Title:</label>
+          <input
+            type="text"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="body">Poem Body:</label>
+          <textarea
+            id="body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Submit Poem</button>
+      </form>
+    </div>
   );
-}
+};
+
+export default PoemForm;

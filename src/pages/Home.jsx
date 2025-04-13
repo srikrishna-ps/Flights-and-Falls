@@ -1,25 +1,21 @@
-// Home.jsx
-
 import React from 'react';
-import { useAuth } from '../hooks/useAuth'; // Use the custom hook to check if the user is logged in
-import { Link } from 'react-router-dom';
+import { loadPoems } from '../utils/loadPoems';
 
 const Home = () => {
-  const { user } = useAuth(); // Accessing the user object from useAuth
+  const poems = loadPoems();
 
   return (
-    <div className="home-container">
-      <h1>Welcome to Flights and Falls</h1>
-      
-      {/* Button to create a new poem visible only for admin */}
-      {user && user.email === process.env.REACT_APP_ADMIN_EMAIL && (
-        <Link to="/write-poem">
-          <button className="write-poem-btn">Write a New Poem</button>
-        </Link>
-      )}
-      
-      <p>Here are the latest poems:</p>
-      {/* Display latest poems */}
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">Here are the latest poems:</h2>
+      {poems.map((poem) => (
+        <div key={poem.slug} className="mb-6 bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h3 className="text-xl font-semibold">{poem.title}</h3>
+          <p className="text-sm text-gray-500">{poem.date}</p>
+          <p className="mt-2 whitespace-pre-line">
+            {poem.content.substring(0, 200)}...
+          </p>
+        </div>
+      ))}
     </div>
   );
 };

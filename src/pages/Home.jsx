@@ -1,20 +1,16 @@
 import React from 'react';
-import loadPoems from '../utils/loadPoems';
+import { getAllPoems } from '../utils/getPoems';
 import PoemCard from '../components/PoemCard';
 
 const Home = () => {
-  const poems = loadPoems();
-  const latestPoems = poems
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 3);
+  const poems = getAllPoems().slice(0, 3); // Latest 3 poems
 
   return (
-    <div className="p-4 text-blue-200">
-      <h1 className="text-3xl font-bold mb-4">Welcome to Flights and Falls</h1>
-      <p className="mb-6 text-lg">Here are the latest poems:</p>
-      <div className="space-y-4">
-        {latestPoems.map((poem) => (
-          <PoemCard key={poem.slug} poem={poem} />
+    <div className="p-6">
+      <h1 className="text-3xl font-bold mb-6 text-blue-900 dark:text-blue-300">Latest Poems</h1>
+      <div className="grid md:grid-cols-3 gap-6">
+        {poems.map(poem => (
+          <PoemCard key={poem.slug} poem={{ ...poem.content, slug: poem.slug }} />
         ))}
       </div>
     </div>

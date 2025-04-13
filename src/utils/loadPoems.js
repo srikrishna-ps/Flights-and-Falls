@@ -1,4 +1,3 @@
-// Dynamically import all markdown poems
 const poems = require.context('../content/poems', false, /\.md\.js$/);
 
 const loadPoems = () => {

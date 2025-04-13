@@ -1,29 +1,25 @@
 // PoemForm.jsx
 
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth'; // Make sure we have access to user authentication
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
 const PoemForm = () => {
-  const { user } = useAuth(); // Get the logged-in user
+  const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate(); // ✅ rename history → navigate
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (title && body) {
-      // Push new poem to Firebase (or markdown, etc)
       console.log("Poem submitted:", { title, body });
-      // Redirect back to Home or All Poems page after submission
-      history.push('/');
+      navigate('/'); // ✅ correct usage in v6
     } else {
       alert("Please fill out both title and body!");
     }
   };
 
-  // Ensure only admin can access the form
   if (!user || user.email !== process.env.REACT_APP_ADMIN_EMAIL) {
     return <p>You must be logged in as an admin to add poems.</p>;
   }

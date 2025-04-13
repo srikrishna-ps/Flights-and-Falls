@@ -1,19 +1,19 @@
 backend:
   name: git-gateway
-  branch: main
+  branch: master
 
-media_folder: "public/images/uploads"
-public_folder: "/images/uploads"
+media_folder: "public/images"
+public_folder: "/images"
 
 collections:
   - name: "poems"
     label: "Poems"
-    folder: "src/content/poems"
+    folder: "poems"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Image", name: "image", widget: "image" }
+      - { label: "Thoughts", name: "thoughts", widget: "string" }
       - { label: "Body", name: "body", widget: "markdown" }
-      - { label: "Thoughts", name: "thoughts", widget: "text", required: false }

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import useTheme from "../hooks/useTheme";
-import useAuth from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Header() {
   const { theme, toggleTheme } = useTheme();

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../firebase/config";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import PoemCard from "../components/PoemCard";
-import useAuth from "../hooks/useAuth";
+import { useAuth } from "../hooks/useAuth";
 import { Link } from "react-router-dom";
 
 function AllPoemsPage() {

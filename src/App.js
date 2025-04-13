@@ -16,6 +16,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/poems" element={<AllPoemsPage />} />
             <Route path="/about" element={<About />} />
+            <Route path="*" element={<div>404 Page Not Found</div>} />
           </Routes>
         </main>
         <Footer />

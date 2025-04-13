@@ -1,20 +1,15 @@
-import matter from 'gray-matter';
+// Dynamically import all markdown poems
+const poems = require.context('../content/poems', false, /\.md\.js$/);
 
-function importAll(r) {
-  return r.keys().map((fileName) => {
-    const rawContent = r(fileName).default;
-    const { data, content } = matter(rawContent);
-    const slug = fileName.replace('./', '').replace('.md.js', '');
-
+const loadPoems = () => {
+  return poems.keys().map((key) => {
+    const poem = poems(key);
     return {
-      slug,
-      ...data,
-      content,
+      ...poem.attributes,
+      body: poem.body,
+      slug: key.replace('./', '').replace('.md.js', '')
     };
   });
-}
+};
 
-export function loadPoems() {
-  const poems = importAll(require.context('../poems', false, /\.md\.js$/));
-  return poems.sort((a, b) => new Date(b.date) - new Date(a.date));
-}
+export default loadPoems;

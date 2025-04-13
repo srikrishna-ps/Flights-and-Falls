@@ -1,21 +1,22 @@
 import React from 'react';
-import { loadPoems } from '../utils/loadPoems';
+import loadPoems from '../utils/loadPoems';
+import PoemCard from '../components/PoemCard';
 
 const Home = () => {
   const poems = loadPoems();
+  const latestPoems = poems
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 3);
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Here are the latest poems:</h2>
-      {poems.map((poem) => (
-        <div key={poem.slug} className="mb-6 bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <h3 className="text-xl font-semibold">{poem.title}</h3>
-          <p className="text-sm text-gray-500">{poem.date}</p>
-          <p className="mt-2 whitespace-pre-line">
-            {poem.content.substring(0, 200)}...
-          </p>
-        </div>
-      ))}
+    <div className="p-4 text-blue-200">
+      <h1 className="text-3xl font-bold mb-4">Welcome to Flights and Falls</h1>
+      <p className="mb-6 text-lg">Here are the latest poems:</p>
+      <div className="space-y-4">
+        {latestPoems.map((poem) => (
+          <PoemCard key={poem.slug} poem={poem} />
+        ))}
+      </div>
     </div>
   );
 };
